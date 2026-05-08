@@ -1,0 +1,17 @@
+#  Digital Alchemist
+
+A terminal-based crafting game inspired by **Little Alchemy**, centered on the **Technological Revolution**.
+
+## 🕹️ Gameplay
+You start with the primal elements of technology: Metal, Electricity, Logic, Vacuum, Sand, and Petroleum. Combine them to discover new synsets. Every discovery impacts your Stability Meter.
+
+* **Innovation:** Your progress toward the Singularity.
+* **Degradation:** Your environmental and social cost.
+
+## Installation
+1. Clone the repo: `git clone https://github.com/YOUR_USERNAME/digital-alchemist.git`
+2. Install dependencies: `pip install -r requirements.txt`
+3. Run the game: `python main.py`
+
+## Logic Engine
+This game uses the WordNet lexical database to handle semantic relationships between elements, ensuring a logical flow from raw materials to advanced AI.
