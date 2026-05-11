@@ -8,16 +8,12 @@
         :root {
             --bg-color: #0a0a0b;
             --panel-bg: rgba(255, 255, 255, 0.03);
-            --border-glow: rgba(0, 224, 255, 0.2);
             --accent-blue: #00e0ff;
             --accent-green: #39ff14;
-            --accent-red: #ff3131;
             --text-main: #e0e0e0;
-            --text-dim: rgba(224, 224, 224, 0.5);
-            --font-mono: 'JetBrains Mono', 'Fira Code', 'Monaco', monospace;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
-        * { box-sizing: border-box; }
         body {
             margin: 0; padding: 0; background-color: var(--bg-color);
             color: var(--text-main); font-family: var(--font-mono);
@@ -25,171 +21,136 @@
             min-height: 100vh; overflow: hidden;
         }
 
-        .dashboard {
-            display: grid; grid-template-columns: 300px 1fr 350px;
-            gap: 20px; width: 95vw; height: 90vh; max-width: 1600px;
+        /* INSTRUCTION OVERLAY */
+        #overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 100;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px;
+        }
+        .instruction-box {
+            max-width: 600px; border: 1px solid var(--accent-blue);
+            padding: 40px; background: #111; border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 224, 255, 0.2);
+        }
+        .start-btn {
+            background: var(--accent-blue); color: #000; border: none;
+            padding: 15px 40px; font-weight: bold; cursor: pointer;
+            margin-top: 30px; border-radius: 5px; text-transform: uppercase;
         }
 
+        /* MAIN DASHBOARD */
+        .dashboard {
+            display: grid; grid-template-columns: 300px 1fr 350px;
+            gap: 20px; width: 95vw; height: 90vh;
+        }
         .panel {
             background: var(--panel-bg); backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
             display: flex; flex-direction: column; padding: 24px;
         }
-
-        h1 { font-size: 1.2rem; color: var(--accent-blue); margin: 0 0 30px 0; text-transform: uppercase; }
-        h2 { font-size: 0.8rem; color: var(--text-dim); margin: 0 0 15px 0; text-transform: uppercase; }
-
-        .stat-card {
-            background: rgba(0, 0, 0, 0.4); border-left: 3px solid var(--accent-blue);
-            padding: 15px; margin-bottom: 20px; border-radius: 4px;
-        }
-        .stat-card.degradation { border-left-color: var(--accent-green); }
-        .stat-value { font-size: 1.8rem; font-weight: bold; display: block; }
-        #inn { color: var(--accent-blue); }
-        #deg { color: var(--accent-green); }
-
-        .crucible { border: 1px solid var(--border-glow); align-items: center; justify-content: center; }
-        .input-chamber { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
-        
-        input {
-            background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px; color: var(--accent-blue); font-family: var(--font-mono);
-            border-radius: 8px; outline: none; text-align: center;
-        }
-
-        button {
-            background: var(--accent-blue); color: #000; border: none; padding: 18px;
-            font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 8px;
-        }
-
-        #terminal-log {
-            margin-top: 30px; font-size: 0.7rem; color: var(--text-dim);
-            height: 120px; overflow-y: auto; width: 100%; border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 15px; line-height: 1.4;
-        }
-
-        .inventory-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 10px; overflow-y: auto;
-        }
-
-        .element-node {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            aspect-ratio: 1; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; border-radius: 6px;
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
+        .stat-card { background: rgba(0,0,0,0.4); padding: 15px; margin-bottom: 20px; border-left: 3px solid var(--accent-blue); }
+        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; overflow-y: auto; }
+        .element-node { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); aspect-ratio: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 6px; }
         .node-symbol { font-size: 1.2rem; font-weight: bold; color: var(--accent-blue); }
-        .node-name { font-size: 0.55rem; text-transform: uppercase; margin-top: 4px; opacity: 0.7; text-align: center; }
+        .node-name { font-size: 0.55rem; text-transform: uppercase; margin-top: 4px; opacity: 0.7; }
+        
+        input { background: #000; border: 1px solid #333; padding: 15px; color: var(--accent-blue); width: 100%; margin-bottom: 10px; text-align: center; border-radius: 5px; }
+        button.transmute { background: var(--accent-blue); border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 5px; }
     </style>
 </head>
 <body>
 
+    <div id="overlay">
+        <div class="instruction-box">
+            <h1 style="color:var(--accent-blue)">DIGITAL ALCHEMIST</h1>
+            <p>Welcome, Operator. Your goal is to advance the Tech Tree.</p>
+            <ul style="text-align: left; font-size: 0.9em; line-height: 1.6;">
+                <li>Combine two elements from your library to discover new ones.</li>
+                <li><strong>Innovation</strong> advances your technological tier.</li>
+                <li><strong>Degradation</strong> tracks environmental or systemic decay.</li>
+                <li>Use semantic logic (e.g., Fire + Metal = Steam Engine).</li>
+            </ul>
+            <button class="start-btn" onclick="startGame()">Initialize System</button>
+        </div>
+    </div>
+
     <div class="dashboard">
         <div class="panel">
-            <h1>Digital Alchemist</h1>
-            <h2>Global Metrics</h2>
-            <div class="stat-card">
-                <span style="font-size: 0.6rem; color: var(--text-dim);">INNOVATION</span>
-                <span id="inn" class="stat-value">0</span>
-            </div>
-            <div class="stat-card degradation">
-                <span style="font-size: 0.6rem; color: var(--text-dim);">DEGRADATION</span>
-                <span id="deg" class="stat-value">0</span>
-            </div>
+            <h2>METRICS</h2>
+            <div class="stat-card"><span>INNOVATION</span><br><span id="inn" style="font-size:1.5em">0</span></div>
+            <div class="stat-card" style="border-left-color:var(--accent-green)"><span>DEGRADATION</span><br><span id="deg" style="font-size:1.5em">0</span></div>
         </div>
 
-        <div class="panel crucible">
-            <h2>Transmutation Crucible</h2>
-            <div class="input-chamber">
-                <input type="text" id="el1" placeholder="[ ELEMENT ALPHA ]" autocomplete="off">
-                <input type="text" id="el2" placeholder="[ ELEMENT BETA ]" autocomplete="off">
-                <button onclick="combine()">Run Synthesis</button>
+        <div class="panel" style="justify-content: center; align-items: center;">
+            <h2>CRUCIBLE</h2>
+            <div style="width: 80%;">
+                <input type="text" id="el1" placeholder="[ ELEMENT A ]">
+                <input type="text" id="el2" placeholder="[ ELEMENT B ]">
+                <button class="transmute" onclick="combine()">TRANSMUTE</button>
             </div>
-            <div id="terminal-log">> System Ready. Awaiting input...</div>
+            <div id="log" style="margin-top:20px; font-size: 0.7em; color: gray; height: 100px; overflow-y: auto; width: 80%;"></div>
         </div>
 
         <div class="panel">
-            <h2>Element Library</h2>
-            <div id="inventory" class="inventory-grid">
-                </div>
+            <h2>LIBRARY</h2>
+            <div id="inventory" class="inventory-grid"></div>
         </div>
     </div>
 
     <script>
-        function getSymbol(name) {
-            return name.substring(0, 2).toUpperCase();
+        function startGame() {
+            document.getElementById('overlay').style.display = 'none';
+            updateDashboard();
         }
 
         async function updateDashboard() {
             try {
-                // We add a timestamp to the URL to prevent browser caching issues
-                const res = await fetch('/?t=' + Date.now());
+                // Fetch from the root URL where Python sends the JSON
+                const res = await fetch('/');
                 const data = await res.json();
                 
-                // Update stats
-                document.getElementById('inn').innerText = data.stats.innovation || 0;
-                document.getElementById('deg').innerText = data.stats.degradation || 0;
+                // Update numbers
+                document.getElementById('inn').innerText = data.stats.innovation;
+                document.getElementById('deg').innerText = data.stats.degradation;
 
-                // Update inventory
+                // Update Library
                 const grid = document.getElementById('inventory');
                 grid.innerHTML = '';
                 
-                const items = data.inventory || data.stats.inventory || [];
-                
-                if (items.length === 0) {
-                    grid.innerHTML = '<div style="grid-column: 1/-1; font-size: 0.7rem; color: gray;">Initializing library...</div>';
-                }
-
-                items.forEach(item => {
+                // We use the data.inventory array sent by Python
+                data.inventory.forEach(item => {
                     grid.innerHTML += `
                         <div class="element-node">
-                            <span class="node-symbol">${getSymbol(item)}</span>
+                            <span class="node-symbol">${item.substring(0, 2).toUpperCase()}</span>
                             <span class="node-name">${item}</span>
                         </div>
                     `;
                 });
             } catch (err) {
-                console.error("Dashboard error:", err);
+                console.error("Link Error:", err);
             }
         }
 
         async function combine() {
-            const el1 = document.getElementById('el1').value.trim().lower();
-            const el2 = document.getElementById('el2').value.trim().lower();
-            const log = document.getElementById('terminal-log');
+            const el1 = document.getElementById('el1').value.toLowerCase();
+            const el2 = document.getElementById('el2').value.toLowerCase();
+            const log = document.getElementById('log');
 
-            if (!el1 || !el2) return;
+            const res = await fetch('/combine', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ el1, el2 })
+            });
+            const data = await res.json();
 
-            log.innerHTML = `> Analyzing ${el1} + ${el2}...<br>` + log.innerHTML;
-
-            try {
-                const res = await fetch('/combine', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ el1, el2 })
-                });
-                const data = await res.json();
-
-                if (data.success) {
-                    log.innerHTML = `<span style="color:var(--accent-blue)">> SUCCESS: Found ${data.discovery}</span><br>` + 
-                                    `<span style="color:var(--text-dim)">> ${data.lore}</span><br>` + log.innerHTML;
-                    document.getElementById('el1').value = '';
-                    document.getElementById('el2').value = '';
-                } else {
-                    log.innerHTML = `<span style="color:var(--accent-red)">> FAILED: ${data.message}</span><br>` + log.innerHTML;
-                }
+            if (data.success) {
+                log.innerHTML = `> Found: ${data.discovery}<br>` + log.innerHTML;
                 updateDashboard();
-            } catch (err) {
-                log.innerHTML = `<span style="color:var(--accent-red)">> ERROR: Connection timed out.</span><br>` + log.innerHTML;
+            } else {
+                log.innerHTML = `<span style="color:red">> ${data.message}</span><br>` + log.innerHTML;
             }
         }
-
-        // Run on load
-        window.onload = updateDashboard;
     </script>
 </body>
 </html>
