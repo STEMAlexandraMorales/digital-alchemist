@@ -171,39 +171,43 @@
         }
 
         async function combine() {
-            const el1 = document.getElementById('el1').value;
-            const el2 = document.getElementById('el2').value;
-            if(!el1 || !el2) return;
+    const el1 = document.getElementById('el1').value.replace(/\s+/g, '_').toLowerCase();
+    const el2 = document.getElementById('el2').value.replace(/\s+/g, '_').toLowerCase();
 
-            const res = await fetch('/combine', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ el1, el2, inventory: gameState.inventory })
-            });
-            const data = await res.json();
+    if (!el1 || !el2) return;
 
-            if (data.success) {
-                const resKey = data.discovery.toLowerCase().replace(/\s+/g, '_');
-                
-                if (!gameState.inventory.includes(resKey)) {
-                    gameState.inventory.push(resKey);
-                    gameState.innovation += data.innovation;
-                    gameState.degradation += data.degradation;
-                    document.getElementById('log').innerHTML = `<b style="color:var(--accent)">NEW: ${data.discovery}</b><br>${data.lore}`;
-                    
-                    if (resKey === "self-actualization") {
-                        document.getElementById('victory').style.display = "flex";
-                    }
-                } else {
-                    document.getElementById('log').innerText = `Already discovered: ${data.discovery}`;
-                }
-                saveGame();
-                clearCrucible();
-            } else {
-                document.getElementById('log').innerText = data.message;
-            }
+    const res = await fetch('/combine', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ el1, el2, inventory: gameState.inventory })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+        // IMPORTANT: Standardize the key to underscores
+        const resKey = data.discovery.replace(/\s+/g, '_').toLowerCase();
+        
+        if (!gameState.inventory.includes(resKey)) {
+            gameState.inventory.push(resKey);
+            
+            // Add the points - Ensure these are numbers
+            gameState.innovation += Number(data.innovation);
+            gameState.degradation += Number(data.degradation);
+            
+            document.getElementById('log').innerHTML = `
+                <div style="color:var(--accent); font-weight:bold;">NEW DATA: ${data.discovery}</div>
+                <div style="font-size:0.8em;">+${data.innovation} Innovation</div>
+                <p>${data.lore}</p>
+            `;
+        } else {
+            document.getElementById('log').innerText = `Redundant discovery: ${data.discovery}`;
         }
-
+        saveGame();
+        clearCrucible();
+    } else {
+        document.getElementById('log').innerText = data.message;
+    }
+}
         function render() {
             document.getElementById('inn').innerText = gameState.innovation;
             document.getElementById('deg').innerText = gameState.degradation;
