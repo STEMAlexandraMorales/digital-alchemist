@@ -4,12 +4,12 @@
 RECIPES = {
     # BASIC MATERIALS
     ("sand", "fire"): ("Glass", 5, 2, "Silicon transformed by heat."),
-    ("metal", "fire"): ("Liquid Metal", 5, 5, "Melted ore ready for casting."),
+    ("metal", "fire"): ("Liquid_Metal", 5, 5, "Melted ore ready for casting."),
     ("water", "fire"): ("Steam", 5, 1, "The first step toward industrial power."),
     ("sand", "water"): ("Clay", 5, 0, "A malleable earth for building."),
     
     # ENERGY & POWER
-    ("electricity", "metal"): ("Copper Wire", 10, 2, "A path for the lightning."),
+    ("electricity", "metal"): ("Copper_Wire", 10, 2, "A path for the lightning."),
     ("petroleum", "fire"): ("Combustion", 15, 20, "Explosive energy released."),
     ("sunlight", "vacuum"): ("Radiation", 10, 10, "Raw cosmic energy."),
     ("electricity", "water"): ("Hydrogen", 15, 5, "Splitting the very atoms of life."),
@@ -209,6 +209,5 @@ RECIPES = {
     ("teleportation", "vacuum"): ("Wormhole_Navigation", 450, 20, "Bridging distant galaxies."),
 }
 
-# Base elements that can't be created but are used for starting
 STARTING_ELEMENTS = ["electricity", "metal", "logic", "vacuum", "sand", "petroleum", "fire", "water", "dna", "sunlight", "uranium", "coal", "ethics"]
 
