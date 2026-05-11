@@ -12,13 +12,13 @@ state = {
 
 @app.route('/')
 def home():
-    # This serves the index.html file if it's in the same folder
-    try:
-        with open('index.html', 'r') as f:
-            return f.read()
-    except:
-        return jsonify({"message": "Digital Alchemist API Online", "stats": state})
-
+    # Return the game state as JSON for the JavaScript to read
+    return jsonify({
+        "inventory": state["inventory"],
+        "stats": {
+            "innovation": state["innovation"],
+            "degradation": state["degradation"]
+        }
 @app.route('/combine', methods=['POST'])
 def combine():
     data = request.get_json()
