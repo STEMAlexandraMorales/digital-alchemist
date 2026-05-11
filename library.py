@@ -101,7 +101,7 @@ RECIPES = {
 
     # --- TIER 4: BIOTECH & HUMAN ELEMENT (EXPANDED) ---
     ("logic", "dna"): ("Bioinformatics", 50, 5, "Mapping the code of life."),
-    ("bioinformatics", "dna"): ("CRISPR", 65, 15, "Genetic editing tools."),
+    ("bioinformatics", "dna"): ("crispr", 65, 15, "Genetic editing tools."),
     ("microchip", "dna"): ("Neural_Link", 70, 25, "Direct brain-computer connection."),
     ("neural_link", "logic"): ("Artificial_Consciousness", 90, 40, "A mind without a body."),
     ("dna", "electricity"): ("Electrophoresis", 30, 5, "Analyzing genetic material."),
