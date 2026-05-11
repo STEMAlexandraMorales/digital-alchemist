@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Alchemist | Synthesis Interface</title>
     <style>
-        /* DESIGN SYSTEM: Modern Laboratory Aesthetic */
         :root {
             --bg-color: #0a0a0b;
             --panel-bg: rgba(255, 255, 255, 0.03);
@@ -19,194 +18,98 @@
         }
 
         * { box-sizing: border-box; }
-
         body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: var(--font-mono);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
+            margin: 0; padding: 0; background-color: var(--bg-color);
+            color: var(--text-main); font-family: var(--font-mono);
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow: hidden;
         }
 
         .dashboard {
-            display: grid;
-            grid-template-columns: 300px 1fr 350px;
-            grid-template-rows: 1fr;
-            gap: 20px;
-            width: 95vw;
-            height: 90vh;
-            max-width: 1600px;
+            display: grid; grid-template-columns: 300px 1fr 350px;
+            gap: 20px; width: 95vw; height: 90vh; max-width: 1600px;
         }
 
-        /* Reusable Glass Panel */
         .panel {
-            background: var(--panel-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-            position: relative;
+            background: var(--panel-bg); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
+            display: flex; flex-direction: column; padding: 24px;
         }
 
-        h1, h2 {
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 400;
-        }
+        h1 { font-size: 1.2rem; color: var(--accent-blue); margin: 0 0 30px 0; text-transform: uppercase; }
+        h2 { font-size: 0.8rem; color: var(--text-dim); margin: 0 0 15px 0; text-transform: uppercase; }
 
-        h1 { font-size: 1.2rem; color: var(--accent-blue); margin-bottom: 30px; }
-        h2 { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 15px; }
-
-        /* Left Column: Monitoring */
         .stat-card {
-            background: rgba(0, 0, 0, 0.4);
-            border-left: 3px solid var(--accent-blue);
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.4); border-left: 3px solid var(--accent-blue);
+            padding: 15px; margin-bottom: 20px; border-radius: 4px;
         }
-
         .stat-card.degradation { border-left-color: var(--accent-green); }
+        .stat-value { font-size: 1.8rem; font-weight: bold; display: block; }
+        #inn { color: var(--accent-blue); }
+        #deg { color: var(--accent-green); }
 
-        .stat-label { font-size: 0.65rem; color: var(--text-dim); display: block; margin-bottom: 5px; }
-        .stat-value { font-size: 1.8rem; font-weight: bold; }
+        .crucible { border: 1px solid var(--border-glow); align-items: center; justify-content: center; }
+        .input-chamber { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
         
-        #inn { color: var(--accent-blue); text-shadow: 0 0 10px rgba(0, 224, 255, 0.3); }
-        #deg { color: var(--accent-green); text-shadow: 0 0 10px rgba(57, 255, 20, 0.3); }
-
-        /* Center Column: The Crucible */
-        .crucible {
-            justify-content: center;
-            align-items: center;
-            border: 1px solid var(--border-glow);
-            box-shadow: inset 0 0 50px rgba(0, 224, 255, 0.05);
-        }
-
-        .input-chamber {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
         input {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            color: var(--accent-blue);
-            font-family: var(--font-mono);
-            font-size: 1rem;
-            border-radius: 8px;
-            outline: none;
-            text-align: center;
-            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px; color: var(--accent-blue); font-family: var(--font-mono);
+            border-radius: 8px; outline: none; text-align: center;
         }
-
-        input:focus { border-color: var(--accent-blue); box-shadow: 0 0 10px rgba(0, 224, 255, 0.2); }
 
         button {
-            background: var(--accent-blue);
-            color: #000;
-            border: none;
-            padding: 18px;
-            font-family: var(--font-mono);
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-radius: 8px;
-            margin-top: 10px;
-            transition: transform 0.1s, box-shadow 0.3s;
+            background: var(--accent-blue); color: #000; border: none; padding: 18px;
+            font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 8px;
         }
-
-        button:hover { box-shadow: 0 0 20px rgba(0, 224, 255, 0.4); }
-        button:active { transform: scale(0.98); }
 
         #terminal-log {
-            margin-top: 40px;
-            width: 100%;
-            max-width: 500px;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            height: 100px;
-            overflow-y: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 20px;
+            margin-top: 30px; font-size: 0.7rem; color: var(--text-dim);
+            height: 120px; overflow-y: auto; width: 100%; border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 15px; line-height: 1.4;
         }
 
-        /* Right Column: Library */
         .inventory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            gap: 12px;
-            overflow-y: auto;
-            padding-right: 5px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px; overflow-y: auto;
         }
 
         .element-node {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 6px;
-            transition: background 0.3s;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            aspect-ratio: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; border-radius: 6px;
+            animation: fadeIn 0.5s ease forwards;
         }
 
-        .element-node:hover { background: rgba(0, 224, 255, 0.1); border-color: var(--accent-blue); }
-        .node-symbol { font-size: 1.1rem; font-weight: bold; color: var(--accent-blue); }
-        .node-name { font-size: 0.5rem; text-transform: uppercase; margin-top: 4px; opacity: 0.6; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        .node-symbol { font-size: 1.2rem; font-weight: bold; color: var(--accent-blue); }
+        .node-name { font-size: 0.55rem; text-transform: uppercase; margin-top: 4px; opacity: 0.7; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="dashboard">
-        
         <div class="panel">
             <h1>Digital Alchemist</h1>
             <h2>Global Metrics</h2>
-            
             <div class="stat-card">
-                <span class="stat-label">Innovation Index</span>
+                <span style="font-size: 0.6rem; color: var(--text-dim);">INNOVATION</span>
                 <span id="inn" class="stat-value">0</span>
             </div>
-
             <div class="stat-card degradation">
-                <span class="stat-label">Degradation Index</span>
+                <span style="font-size: 0.6rem; color: var(--text-dim);">DEGRADATION</span>
                 <span id="deg" class="stat-value">0</span>
-            </div>
-
-            <div style="margin-top: auto; font-size: 0.6rem; color: var(--text-dim);">
-                System Status: <span style="color: var(--accent-green);">Stable</span><br>
-                Core Build: 2026.04.12
             </div>
         </div>
 
         <div class="panel crucible">
             <h2>Transmutation Crucible</h2>
             <div class="input-chamber">
-                <input type="text" id="el1" placeholder="[ ELEMENT ALPHA ]">
-                <input type="text" id="el2" placeholder="[ ELEMENT BETA ]">
+                <input type="text" id="el1" placeholder="[ ELEMENT ALPHA ]" autocomplete="off">
+                <input type="text" id="el2" placeholder="[ ELEMENT BETA ]" autocomplete="off">
                 <button onclick="combine()">Run Synthesis</button>
             </div>
-            <div id="terminal-log">
-                > System initialized.<br>
-                > Awaiting chemical input...
-            </div>
+            <div id="terminal-log">> System Ready. Awaiting input...</div>
         </div>
 
         <div class="panel">
@@ -214,29 +117,34 @@
             <div id="inventory" class="inventory-grid">
                 </div>
         </div>
-
     </div>
 
     <script>
-        // Helper to format names into 2-letter symbols for the chemistry look
         function getSymbol(name) {
             return name.substring(0, 2).toUpperCase();
         }
 
-        // Fetch current game state from Python backend
         async function updateDashboard() {
             try {
-                const res = await fetch('/');
+                // We add a timestamp to the URL to prevent browser caching issues
+                const res = await fetch('/?t=' + Date.now());
                 const data = await res.json();
                 
-                // Update UI numbers
-                document.getElementById('inn').innerText = data.stats.innovation;
-                document.getElementById('deg').innerText = data.stats.degradation;
+                // Update stats
+                document.getElementById('inn').innerText = data.stats.innovation || 0;
+                document.getElementById('deg').innerText = data.stats.degradation || 0;
 
-                // Update Library Grid
+                // Update inventory
                 const grid = document.getElementById('inventory');
                 grid.innerHTML = '';
-                data.inventory.forEach(item => {
+                
+                const items = data.inventory || data.stats.inventory || [];
+                
+                if (items.length === 0) {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; font-size: 0.7rem; color: gray;">Initializing library...</div>';
+                }
+
+                items.forEach(item => {
                     grid.innerHTML += `
                         <div class="element-node">
                             <span class="node-symbol">${getSymbol(item)}</span>
@@ -245,19 +153,18 @@
                     `;
                 });
             } catch (err) {
-                console.error("Dashboard link failed:", err);
+                console.error("Dashboard error:", err);
             }
         }
 
-        // Send combination to the Python engine
         async function combine() {
-            const el1 = document.getElementById('el1').value;
-            const el2 = document.getElementById('el2').value;
+            const el1 = document.getElementById('el1').value.trim().lower();
+            const el2 = document.getElementById('el2').value.trim().lower();
             const log = document.getElementById('terminal-log');
 
-            if(!el1 || !el2) return;
+            if (!el1 || !el2) return;
 
-            log.innerHTML = `> Initiating reaction: ${el1} + ${el2}...<br>` + log.innerHTML;
+            log.innerHTML = `> Analyzing ${el1} + ${el2}...<br>` + log.innerHTML;
 
             try {
                 const res = await fetch('/combine', {
@@ -265,31 +172,24 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ el1, el2 })
                 });
-                
                 const data = await res.json();
-                
+
                 if (data.success) {
-                    if (data.discovery) {
-                        log.innerHTML = `<span style="color: var(--accent-blue)">> SUCCESS: Synthesis of ${data.discovery} complete.</span><br>` + log.innerHTML;
-                        log.innerHTML = `> ${data.lore}<br>` + log.innerHTML;
-                    } else {
-                        log.innerHTML = `> NOTICE: Elements recognized, result already discovered.<br>` + log.innerHTML;
-                    }
-                    // Clear inputs
+                    log.innerHTML = `<span style="color:var(--accent-blue)">> SUCCESS: Found ${data.discovery}</span><br>` + 
+                                    `<span style="color:var(--text-dim)">> ${data.lore}</span><br>` + log.innerHTML;
                     document.getElementById('el1').value = '';
                     document.getElementById('el2').value = '';
                 } else {
-                    log.innerHTML = `<span style="color: var(--accent-red)">> ERROR: Negative reaction. Synthesis failed.</span><br>` + log.innerHTML;
+                    log.innerHTML = `<span style="color:var(--accent-red)">> FAILED: ${data.message}</span><br>` + log.innerHTML;
                 }
+                updateDashboard();
             } catch (err) {
-                log.innerHTML = `<span style="color: var(--accent-red)">> CRITICAL: Connection to engine lost.</span><br>` + log.innerHTML;
+                log.innerHTML = `<span style="color:var(--accent-red)">> ERROR: Connection timed out.</span><br>` + log.innerHTML;
             }
-
-            updateDashboard();
         }
 
-        // Run initial data pull
-        updateDashboard();
+        // Run on load
+        window.onload = updateDashboard;
     </script>
 </body>
 </html>
