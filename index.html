@@ -170,21 +170,21 @@
         }
 
         async function combine() {
-            const el1Raw = document.getElementById('el1').value;
-            const el2Raw = document.getElementById('el2').value;
+    const el1Raw = document.getElementById('el1').value;
+    const el2Raw = document.getElementById('el2').value;
 
-            if (!el1Raw || !el2Raw) return;
+    if (!el1Raw || !el2Raw) return;
 
             // Normalize names to match library.py (lowercase with underscores)
-            const el1 = el1Raw.toLowerCase().replace(/\s+/g, '_');
-            const el2 = el2Raw.toLowerCase().replace(/\s+/g, '_');
+    const el1 = el1Raw.toLowerCase().replace(/\s+/g, '_');
+    const el2 = el2Raw.toLowerCase().replace(/\s+/g, '_');
 
-            try {
-                const res = await fetch('/combine', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ el1, el2, inventory: gameState.inventory })
-                });
+    try {
+        const res = await fetch('/combine', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ el1, el2 })
+        });
                 const data = await res.json();
 
                 if (data.success) {
