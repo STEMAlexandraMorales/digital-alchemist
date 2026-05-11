@@ -141,17 +141,21 @@
         }
 
         function selectElement(name) {
-            const e1 = document.getElementById('el1');
-            const e2 = document.getElementById('el2');
-            const displayName = name.replace(/_/g, ' ');
+    const e1 = document.getElementById('el1');
+    const e2 = document.getElementById('el2');
+    
+    // Clean the name: replace underscores with spaces for the UI display
+    const displayName = name.replace(/_/g, ' ');
 
-            if (!e1.value) e1.value = displayName;
-            else if (!e2.value) e2.value = displayName;
-            else {
-                e1.value = displayName;
-                e2.value = "";
-            }
-        }
+    if (!e1.value) {
+        e1.value = displayName;
+    } else if (!e2.value) {
+        e2.value = displayName;
+    } else {
+        e1.value = displayName;
+        e2.value = "";
+    }
+}
 
         function clearCrucible() {
             document.getElementById('el1').value = "";
