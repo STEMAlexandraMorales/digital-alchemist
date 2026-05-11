@@ -2,6 +2,35 @@
 # Format: (Element_A, Element_B): (Result, Innovation, Degradation, Lore)
 
 RECIPES = {
+    # BASIC MATERIALS
+    ("sand", "fire"): ("Glass", 5, 2, "Silicon transformed by heat."),
+    ("metal", "fire"): ("Liquid Metal", 5, 5, "Melted ore ready for casting."),
+    ("water", "fire"): ("Steam", 5, 1, "The first step toward industrial power."),
+    ("sand", "water"): ("Clay", 5, 0, "A malleable earth for building."),
+    
+    # ENERGY & POWER
+    ("electricity", "metal"): ("Copper Wire", 10, 2, "A path for the lightning."),
+    ("petroleum", "fire"): ("Combustion", 15, 20, "Explosive energy released."),
+    ("sunlight", "vacuum"): ("Radiation", 10, 10, "Raw cosmic energy."),
+    ("electricity", "water"): ("Hydrogen", 15, 5, "Splitting the very atoms of life."),
+    
+    # COMPUTATION & LOGIC
+    ("logic", "electricity"): ("Binary", 20, 0, "The language of ones and zeros."),
+    ("sand", "electricity"): ("Silicon Chip", 25, 5, "Modern alchemy carved into sand."),
+    ("logic", "metal"): ("Mechanism", 15, 2, "Clocks, gears, and automated movement."),
+    ("vacuum", "electricity"): ("Vacuum Tube", 15, 3, "An early vessel for digital thoughts."),
+    
+    # BIOLOGICAL & ORGANIC
+    ("dna", "sunlight"): ("Photosynthesis", 20, -5, "Life learning to eat light."),
+    ("dna", "water"): ("Plankton", 10, -2, "The soup of existence."),
+    ("petroleum", "logic"): ("Plastic", 10, 15, "Synthetic material that never dies."),
+    ("dna", "electricity"): ("Mutation", 20, 25, "Rapid, unstable biological change."),
+    
+    # PLANETARY & SPACE
+    ("vacuum", "sand"): ("Dust Cloud", 5, 0, "The beginning of a nebula."),
+    ("sunlight", "water"): ("Algae", 10, -5, "Green growth in the shallows."),
+    ("metal", "logic"): ("Automaton", 30, 10, "A machine that follows orders."),
+}
     # --- TIER 1: THE INDUSTRIAL SPARK ---
     ("metal", "fire"): ("Steam_Engine", 10, 15, "The heart of early industry."),
     ("steam_engine", "metal"): ("Locomotive", 12, 12, "Connecting distant lands via rail."),
