@@ -210,5 +210,5 @@ RECIPES = {
 }
 
 # Base elements that can't be created but are used for starting
-STARTING_ELEMENTS = {"electricity", "metal", "logic", "vacuum", "sand", "petroleum", "fire", "water", "dna", "sunlight", "uranium", "coal", "ethics"}
+STARTING_ELEMENTS = ["electricity", "metal", "logic", "vacuum", "sand", "petroleum", "fire", "water", "dna", "sunlight", "uranium", "coal", "ethics"]
 
