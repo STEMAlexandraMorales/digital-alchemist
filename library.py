@@ -118,7 +118,7 @@ RECIPES = {
     ("dna", "glass"): ("Petri_Dish", 10, 2, "The canvas of the microbiologist."),
     ("petri_dish", "plankton"): ("Bio_Culture", 20, -5, "Controlled growth of microorganisms."),
     ("bio_culture", "ethics"): ("Stem_Cell_Research", 55, 0, "The ethical study of life’s origins."),
-    ("crispr", "ethics"): ("Genetic_Policy", 50, -30, "The rules for rewriting nature."
+    ("crispr", "ethics"): ("Genetic_Policy", 50, -30, "The rules for rewriting nature."),
    
     # --- TIER 5: ENERGY REVOLUTION (EXPANDED) ---
     ("sunlight", "silicon"): ("Solar_Panel", 40, 5, "Capturing photons for power."),
