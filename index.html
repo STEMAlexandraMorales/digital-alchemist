@@ -209,21 +209,25 @@
     }
 }
         function render() {
-            document.getElementById('inn').innerText = gameState.innovation;
-            document.getElementById('deg').innerText = gameState.degradation;
-            
-            const grid = document.getElementById('inv');
-            grid.innerHTML = "";
-            
-            // Sort alphabetical for easier finding
-            gameState.inventory.sort().forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'element-card';
-                card.innerText = item.replace(/_/g, ' ');
-                card.onclick = () => selectElement(item);
-                grid.appendChild(card);
-            });
-        }
+    // Force numbers to prevent "NaN" or empty strings
+    const innVal = Number(gameState.innovation) || 0;
+    const degVal = Number(gameState.degradation) || 0;
+
+    document.getElementById('inn').innerText = innVal.toLocaleString();
+    document.getElementById('deg').innerText = degVal.toLocaleString();
+    
+    const grid = document.getElementById('inv');
+    grid.innerHTML = "";
+    
+    // Sort Alphabetically so the 500 items are easy to find
+    [...gameState.inventory].sort().forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'element-card';
+        card.innerText = item.replace(/_/g, ' '); // Show "Liquid Metal" instead of "liquid_metal"
+        card.onclick = () => selectElement(item);
+        grid.appendChild(card);
+    });
+}
 
         render();
     </script>
