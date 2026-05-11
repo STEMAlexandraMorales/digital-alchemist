@@ -4,9 +4,8 @@ from utils import check_semantic_match
 
 app = Flask(__name__)
 
-# Game State
 state = {
-    "inventory": list(STARTING_ELEMENTS),
+    "inventory": [e.lower() for e in STARTING_ELEMENTS], # Force lowercase
     "innovation": 0,
     "degradation": 0
 }
