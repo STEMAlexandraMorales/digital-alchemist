@@ -30,7 +30,7 @@ RECIPES = {
     ("vacuum", "sand"): ("Dust Cloud", 5, 0, "The beginning of a nebula."),
     ("sunlight", "water"): ("Algae", 10, -5, "Green growth in the shallows."),
     ("metal", "logic"): ("Automaton", 30, 10, "A machine that follows orders."),
-}
+    
     # --- TIER 1: THE INDUSTRIAL SPARK ---
     ("metal", "fire"): ("Steam_Engine", 10, 15, "The heart of early industry."),
     ("steam_engine", "metal"): ("Locomotive", 12, 12, "Connecting distant lands via rail."),
