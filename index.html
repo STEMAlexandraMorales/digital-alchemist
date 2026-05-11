@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +17,7 @@
             margin: 0; background: var(--bg); color: var(--text);
             font-family: 'Courier New', Courier, monospace;
             display: grid; grid-template-columns: 280px 1fr 350px;
-            height: 100vh; overflow: hidden; /* Prevents whole page scroll */
+            height: 100vh; overflow: hidden;
         }
 
         /* --- SIDEBARS --- */
@@ -26,19 +27,18 @@
             border-right: 1px solid #222; 
             display: flex; 
             flex-direction: column; 
-            height: 100vh; /* Lock to screen height */
+            height: 100vh;
             box-sizing: border-box;
         }
 
-        /* --- SCROLLABLE LIBRARY --- */
         .inventory-container {
             flex-grow: 1; 
-            overflow-y: auto; /* ENABLE SCROLLING */
+            overflow-y: auto;
             margin-top: 10px;
             padding-right: 5px;
         }
 
-        /* Custom Scrollbar Styling */
+        /* Scrollbar Styling */
         .inventory-container::-webkit-scrollbar { width: 5px; }
         .inventory-container::-webkit-scrollbar-track { background: #000; }
         .inventory-container::-webkit-scrollbar-thumb { background: var(--accent); }
@@ -64,17 +64,19 @@
         input { 
             background: #000; border: 2px solid #222; color: var(--accent); 
             padding: 18px; width: 200px; text-align: center;
-            border-radius: 8px; font-weight: bold;
+            border-radius: 8px; font-weight: bold; outline: none;
         }
+        input.filled { border-color: var(--accent); box-shadow: 0 0 10px rgba(0, 224, 255, 0.2); }
 
         button.transmute {
             background: var(--accent); color: #000; border: none;
             padding: 20px 60px; font-weight: bold; cursor: pointer;
-            border-radius: 8px; font-size: 1.1em;
+            border-radius: 8px; font-size: 1.1em; transition: 0.3s;
         }
+        button.transmute:hover { filter: brightness(1.2); transform: scale(1.05); }
 
         .stat-box { background: #000; padding: 15px; border-left: 4px solid var(--accent); margin-bottom: 20px; }
-        #log { min-height: 120px; color: #888; font-size: 0.9em; margin-top: 20px; }
+        #log { min-height: 120px; color: #888; font-size: 0.9em; margin-top: 20px; max-width: 500px; }
 
         #victory {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
@@ -107,7 +109,7 @@
         <h1 style="opacity: 0.5;">[ CORE CRUCIBLE ]</h1>
         <div class="input-group">
             <input type="text" id="el1" placeholder="ALPHA" readonly>
-            <span>+</span>
+            <span style="font-size: 2em; opacity: 0.3;">+</span>
             <input type="text" id="el2" placeholder="BETA" readonly>
         </div>
         <button class="transmute" onclick="combine()">TRANSMUTE</button>
@@ -124,8 +126,7 @@
     </div>
 
     <script>
-        // --- SAVE SYSTEM ---
-        // Load existing data or start fresh
+        // --- DATA STATE ---
         let gameState = JSON.parse(localStorage.getItem('alchemist_save_v2')) || {
             inventory: ["electricity", "metal", "logic", "vacuum", "sand", "petroleum", "fire", "water", "dna", "sunlight", "uranium", "coal", "ethics"],
             innovation: 0,
@@ -148,19 +149,26 @@
         function selectElement(name) {
             const e1 = document.getElementById('el1');
             const e2 = document.getElementById('el2');
+            const cleanName = name.replace(/_/g, ' ');
             
-            // Set Alpha first, then Beta
-            if (!e1.value) e1.value = name;
-            else if (!e2.value) e2.value = name;
-            else {
-                e1.value = name;
+            if (!e1.value) {
+                e1.value = cleanName;
+                e1.classList.add('filled');
+            } else if (!e2.value) {
+                e2.value = cleanName;
+                e2.classList.add('filled');
+            } else {
+                e1.value = cleanName;
                 e2.value = "";
+                e2.classList.remove('filled');
             }
         }
 
         function clearCrucible() {
             document.getElementById('el1').value = "";
             document.getElementById('el2').value = "";
+            document.getElementById('el1').classList.remove('filled');
+            document.getElementById('el2').classList.remove('filled');
         }
 
         function filterLibrary() {
@@ -171,64 +179,75 @@
         }
 
         async function combine() {
-    const el1 = document.getElementById('el1').value.replace(/\s+/g, '_').toLowerCase();
-    const el2 = document.getElementById('el2').value.replace(/\s+/g, '_').toLowerCase();
+            // Standardize names for backend comparison (lowercase and underscores)
+            const el1 = document.getElementById('el1').value.toLowerCase().replace(/\s+/g, '_');
+            const el2 = document.getElementById('el2').value.toLowerCase().replace(/\s+/g, '_');
 
-    if (!el1 || !el2) return;
+            if (!el1 || !el2) {
+                document.getElementById('log').innerText = "Select two elements first.";
+                return;
+            }
 
-    const res = await fetch('/combine', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ el1, el2, inventory: gameState.inventory })
-    });
-    const data = await res.json();
+            try {
+                const res = await fetch('/combine', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ el1, el2, inventory: gameState.inventory })
+                });
+                const data = await res.json();
 
-    if (data.success) {
-        // IMPORTANT: Standardize the key to underscores
-        const resKey = data.discovery.replace(/\s+/g, '_').toLowerCase();
-        
-        if (!gameState.inventory.includes(resKey)) {
-            gameState.inventory.push(resKey);
-            
-            // Add the points - Ensure these are numbers
-            gameState.innovation += Number(data.innovation);
-            gameState.degradation += Number(data.degradation);
-            
-            document.getElementById('log').innerHTML = `
-                <div style="color:var(--accent); font-weight:bold;">NEW DATA: ${data.discovery}</div>
-                <div style="font-size:0.8em;">+${data.innovation} Innovation</div>
-                <p>${data.lore}</p>
-            `;
-        } else {
-            document.getElementById('log').innerText = `Redundant discovery: ${data.discovery}`;
+                if (data.success) {
+                    const resKey = data.discovery.toLowerCase().replace(/\s+/g, '_');
+                    
+                    if (!gameState.inventory.includes(resKey)) {
+                        gameState.inventory.push(resKey);
+                        gameState.innovation += Number(data.innovation);
+                        gameState.degradation += Number(data.degradation);
+                        
+                        document.getElementById('log').innerHTML = `
+                            <div style="color:var(--accent); font-weight:bold;">NEW DISCOVERY: ${data.discovery}</div>
+                            <div style="font-size:0.8em; margin-bottom:10px;">+${data.innovation} Innovation</div>
+                            <p>${data.lore}</p>
+                        `;
+
+                        if (resKey === "self-actualization") {
+                            document.getElementById('victory').style.display = "flex";
+                        }
+                    } else {
+                        document.getElementById('log').innerHTML = `
+                            <div style="color:#888;">REDUNDANT DATA: ${data.discovery}</div>
+                            <p>${data.lore}</p>
+                        `;
+                    }
+                    saveGame(); // Calls render() internally
+                    clearCrucible();
+                } else {
+                    document.getElementById('log').innerText = data.message;
+                }
+            } catch (err) {
+                document.getElementById('log').innerText = "System error. Check server logs.";
+            }
         }
-        saveGame();
-        clearCrucible();
-    } else {
-        document.getElementById('log').innerText = data.message;
-    }
-}
+
         function render() {
-    // Force numbers to prevent "NaN" or empty strings
-    const innVal = Number(gameState.innovation) || 0;
-    const degVal = Number(gameState.degradation) || 0;
+            // Update Stats Display
+            document.getElementById('inn').innerText = Number(gameState.innovation).toLocaleString();
+            document.getElementById('deg').innerText = Number(gameState.degradation).toLocaleString();
+            
+            const grid = document.getElementById('inv');
+            grid.innerHTML = "";
+            
+            // Sort library alphabetically for ease of use
+            [...gameState.inventory].sort().forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'element-card';
+                card.innerText = item.replace(/_/g, ' ');
+                card.onclick = () => selectElement(item);
+                grid.appendChild(card);
+            });
+        }
 
-    document.getElementById('inn').innerText = innVal.toLocaleString();
-    document.getElementById('deg').innerText = degVal.toLocaleString();
-    
-    const grid = document.getElementById('inv');
-    grid.innerHTML = "";
-    
-    // Sort Alphabetically so the 500 items are easy to find
-    [...gameState.inventory].sort().forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'element-card';
-        card.innerText = item.replace(/_/g, ' '); // Show "Liquid Metal" instead of "liquid_metal"
-        card.onclick = () => selectElement(item);
-        grid.appendChild(card);
-    });
-}
-
+        // Initial launch
         render();
     </script>
 </body>
