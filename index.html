@@ -122,6 +122,7 @@
     </div>
 
     <script>
+        // Load save data or start with defaults
         let gameState = JSON.parse(localStorage.getItem('alchemist_save_v2')) || {
             inventory: ["electricity", "metal", "logic", "vacuum", "sand", "petroleum", "fire", "water", "dna", "sunlight", "uranium", "coal", "ethics"],
             innovation: 0,
@@ -141,21 +142,19 @@
         }
 
         function selectElement(name) {
-    const e1 = document.getElementById('el1');
-    const e2 = document.getElementById('el2');
-    
-    // Clean the name: replace underscores with spaces for the UI display
-    const displayName = name.replace(/_/g, ' ');
+            const e1 = document.getElementById('el1');
+            const e2 = document.getElementById('el2');
+            const displayName = name.replace(/_/g, ' ');
 
-    if (!e1.value) {
-        e1.value = displayName;
-    } else if (!e2.value) {
-        e2.value = displayName;
-    } else {
-        e1.value = displayName;
-        e2.value = "";
-    }
-}
+            if (!e1.value) {
+                e1.value = displayName;
+            } else if (!e2.value) {
+                e2.value = displayName;
+            } else {
+                e1.value = displayName;
+                e2.value = "";
+            }
+        }
 
         function clearCrucible() {
             document.getElementById('el1').value = "";
@@ -170,21 +169,21 @@
         }
 
         async function combine() {
-    const el1Raw = document.getElementById('el1').value;
-    const el2Raw = document.getElementById('el2').value;
+            const el1Raw = document.getElementById('el1').value;
+            const el2Raw = document.getElementById('el2').value;
 
-    if (!el1Raw || !el2Raw) return;
+            if (!el1Raw || !el2Raw) return;
 
-            // Normalize names to match library.py (lowercase with underscores)
-    const el1 = el1Raw.toLowerCase().replace(/\s+/g, '_');
-    const el2 = el2Raw.toLowerCase().replace(/\s+/g, '_');
+            // Convert "Silicon Chip" back to "silicon_chip" for library lookup
+            const el1 = el1Raw.toLowerCase().replace(/\s+/g, '_');
+            const el2 = el2Raw.toLowerCase().replace(/\s+/g, '_');
 
-    try {
-        const res = await fetch('/combine', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ el1, el2 })
-        });
+            try {
+                const res = await fetch('/combine', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ el1, el2 })
+                });
                 const data = await res.json();
 
                 if (data.success) {
@@ -192,8 +191,9 @@
                     
                     if (!gameState.inventory.includes(resKey)) {
                         gameState.inventory.push(resKey);
-                        gameState.innovation += Number(data.innovation);
-                        gameState.degradation += Number(data.degradation);
+                        // Backend sends innovation/degradation numbers
+                        gameState.innovation += (Number(data.innovation) || 0);
+                        gameState.degradation += (Number(data.degradation) || 0);
                         
                         document.getElementById('log').innerHTML = `
                             <div style="color:var(--accent); font-weight:bold;">NEW DATA: ${data.discovery.replace(/_/g, ' ')}</div>
